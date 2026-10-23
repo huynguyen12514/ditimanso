@@ -384,7 +384,7 @@ function renderInstructionBanner() {
         textEl.innerText = "Cuộc gọi từ Ngân hàng! Hãy xem xét lời đề nghị.";
         subEl.innerText = "Đưa ra quyết định DEAL (Bán) hoặc NO DEAL (Tiếp tục).";
     } else if (gameState.phase === 'FINAL_SWAP') {
-        statusBadge.innerText = "Vòng Áp Chót";
+        statusBadge.innerText = "Vòng Cuối Cùng";
         textEl.innerText = "Chỉ còn 2 cặp! Mở cặp áp chót trước khi chốt chung cuộc.";
         subEl.innerText = "Click chọn cặp cuối cùng trên sân khấu.";
     } else if (gameState.phase === 'GAME_OVER') {
