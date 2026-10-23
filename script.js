@@ -327,7 +327,7 @@ function renderCasesGrid() {
     <div class="briefcase-inner">
         <div class="briefcase-front flex items-center justify-center relative p-0.5">
             <!-- TĂNG KÍCH THƯỚC Ở ĐÂY: đổi text-xs sm:text-lg thành text-2xl sm:text-4xl hoặc to hơn nữa tùy thích -->
-            <span class="text-2xl sm:text-4xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
+            <span class="text-2xl sm:text-3xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
             ${isUserCase ? '<span class="absolute top-1 right-1 text-[7px] sm:text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded shadow">CHỌN</span>' : ''}
         </div>
         <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
