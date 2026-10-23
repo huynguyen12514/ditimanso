@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Đi Tìm Ân Số - Deal or No Deal</title>
-	<link rel="icon" type="image/png" href="DTAS_logo_HTV7_2016.webp">
+    <link rel="icon" type="image/png" href="DTAS_logo_HTV7_2016.webp">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -26,926 +26,215 @@
     </script>
     <!-- Google Fonts: Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%);
-            color: #f8fafc;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .glass-panel-active {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(234, 179, 8, 0.3);
-            box-shadow: 0 0 30px rgba(234, 179, 8, 0.2);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .briefcase {
-            perspective: 1000px;
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-        }
-        .briefcase-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .briefcase.flipped .briefcase-inner {
-            transform: rotateY(180deg);
-        }
-        .briefcase-front, .briefcase-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-            transition: background 0.4s ease, border-color 0.4s ease;
-        }
-        @media (min-width: 640px) {
-            .briefcase-front, .briefcase-back {
-                border-radius: 0.75rem;
-            }
-        }
-        .briefcase-front {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.5);
-        }
-        .briefcase:hover:not(.opened):not(.user-personal) .briefcase-front {
-            border-color: #fbbf24;
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 10px 20px -3px rgba(251, 191, 36, 0.4);
-        }
-        .briefcase-back {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            border: 1.5px solid rgba(100, 116, 139, 0.3);
-            transform: rotateY(180deg);
-        }
-        .briefcase.user-personal .briefcase-front {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            border: 2px solid #fef08a;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
-        }
-        .briefcase.opened .briefcase-front {
-            background: #020617;
-            border-color: rgba(255, 255, 255, 0.03);
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none;
-        }
-        .led-glow {
-            text-shadow: 0 0 12px rgba(251, 191, 36, 0.7), 0 0 25px rgba(245, 158, 11, 0.4);
-        }
-        .pulse-glow {
-            animation: pulseGlow 2.5s infinite ease-in-out;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-            50% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.75); }
-        }
-        .highlight-prize {
-            background-color: #fbbf24 !important;
-            color: #07090e !important;
-            border-color: #fef08a !important;
-            box-shadow: 0 0 20px #fbbf24 !important;
-            transform: scale(1.05);
-            z-index: 10;
-            transition: all 0.3s ease;
-        }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-        ::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.8); border-radius: 4px; }
-    </style>
+    <!-- External Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen flex flex-col select-none antialiased">
+<body class="min-h-screen flex flex-col select-none antialiased pb-4">
 
     <!-- HEADER WITH LOGO -->
-    <header class="py-2 px-3 sm:px-6 glass-panel border-b border-slate-800/80 flex items-center justify-between sticky top-0 z-40 shadow-xl">
+    <header class="py-2 px-3 sm:px-5 glass-panel border-b border-slate-800/80 flex items-center justify-between sticky top-0 z-40 shadow-xl">
         <div class="flex items-center space-x-2 sm:space-x-3">
-            <img src="DTAS_logo_HTV7_2016.webp" alt="Đi Tìm Ân Số Logo" class="h-7 sm:h-11 object-contain drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">
+            <img src="DTAS_logo_HTV7_2016.webp" alt="Đi Tìm Ân Số Logo" class="h-7 sm:h-10 object-contain drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">
             <div>
-                <h1 class="text-sm sm:text-lg font-black tracking-wider text-amber-400 led-glow leading-none">ĐI TÌM ÂN SỐ</h1>
-                <p class="text-[8px] sm:text-[9px] tracking-widest uppercase text-slate-400 font-semibold mt-0.5 sm:mt-1">Deal or No Deal Studio</p>
+                <h1 class="text-xs sm:text-base font-black tracking-wider text-amber-400 led-glow leading-none">ĐI TÌM ÂN SỐ</h1>
+                <p class="text-[7px] sm:text-[9px] tracking-widest uppercase text-slate-400 font-semibold mt-0.5">Deal or No Deal</p>
             </div>
         </div>
 
-        <div class="flex items-center space-x-1.5 sm:space-x-3">
-            <div id="status-badge" class="hidden md:flex px-3.5 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-bold text-amber-300 shadow-inner">
+        <div class="flex items-center space-x-1.5 sm:space-x-2.5">
+            <div id="status-badge" class="hidden md:flex px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-bold text-amber-300 shadow-inner">
                 Trạng thái: Đang chuẩn bị
             </div>
-            <button onclick="toggleAudio()" id="audio-toggle-btn" class="p-1.5 sm:p-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 text-xs sm:text-base" title="Bật/Tắt Âm thanh">
+            <button onclick="toggleAudio()" id="audio-toggle-btn" class="p-1.5 sm:p-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 text-xs sm:text-sm" title="Bật/Tắt Âm thanh">
                 🔊
             </button>
-            <button onclick="confirmReset()" class="px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 bg-rose-600 active:bg-rose-500 text-white font-bold rounded-xl text-xs sm:text-sm shadow-md active:scale-95">
+            <button onclick="confirmReset()" class="px-2.5 py-1.5 bg-rose-600 active:bg-rose-500 text-white font-bold rounded-xl text-xs shadow-md active:scale-95 transition-transform">
                 Chơi Lại
             </button>
         </div>
     </header>
 
     <!-- WELCOME SCREEN -->
-    <div id="welcome-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-center p-4 transition-all duration-500 ease-out">
-        <div class="glass-panel-active rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
-            <div class="mx-auto mb-4 max-w-[180px] sm:max-w-[220px] flex items-center justify-center">
+    <div id="welcome-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="glass-panel-active rounded-3xl max-w-md w-full p-6 text-center shadow-2xl relative overflow-hidden modal-card">
+            <div class="mx-auto mb-4 max-w-[160px] flex items-center justify-center">
                 <img src="DTAS_logo_HTV7_2016.webp" alt="Đi Tìm Ân Số Logo" class="w-full h-auto object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]">
             </div>
 
-            <p class="text-xs sm:text-sm text-slate-300 mb-5 leading-relaxed">Trải nghiệm game show truyền hình đẳng cấp với 26 chiếc cặp bí ẩn và phần thưởng lên đến 100.000.000!</p>
+            <p class="text-xs sm:text-sm text-slate-300 mb-5 leading-relaxed">Trải nghiệm game show truyền hình với 26 chiếc cặp bí ẩn và phần thưởng lên đến 100.000.000!</p>
             
             <div class="mb-5 text-left">
                 <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tên Người Chơi</label>
-                <input type="text" id="player-name-input" value="Thí Sinh" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 font-bold focus:outline-none focus:border-amber-400 text-sm" placeholder="Nhập tên của bạn...">
+                <input type="text" id="player-name-input" value="Thí Sinh" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 font-bold focus:outline-none focus:border-amber-400 text-sm transition-colors" placeholder="Nhập tên của bạn...">
             </div>
 
-            <button onclick="startGameSession()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black rounded-2xl shadow-xl active:scale-95 text-sm sm:text-lg uppercase tracking-wider">
-                Bắt Đầu Sân Khấu
+            <button onclick="startGameSession()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black rounded-2xl shadow-xl active:scale-95 text-sm uppercase tracking-wider transition-all hover:brightness-110">
+               BẮT ĐẦU TRÒ CHƠI
             </button>
         </div>
     </div>
 
     <!-- MAIN CONTAINER -->
-    <main class="flex-1 max-w-[1650px] w-full mx-auto p-2 sm:p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-4">
+    <main class="flex-1 max-w-[1920px] w-full mx-auto p-2 sm:p-4 flex flex-col lg:grid lg:grid-cols-12 gap-3 items-start">
         
         <!-- TOP BANNER & USER BRIEFCASE STATUS -->
-        <section class="lg:col-span-12 w-full grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 order-1">
-            <div id="instruction-banner" class="glass-panel rounded-xl p-2.5 sm:p-3 text-center shadow-xl border-l-4 border-amber-400 flex flex-col justify-center">
+        <section class="lg:col-span-12 w-full grid grid-cols-1 sm:grid-cols-2 gap-2 order-1">
+            <div id="instruction-banner" class="glass-panel rounded-xl p-2 sm:p-2.5 text-center shadow-xl border-l-4 border-amber-400 flex flex-col justify-center">
                 <p id="instruction-text" class="text-xs sm:text-sm font-bold text-slate-100">Chào mừng bạn đến với sân khấu Đi Tìm Ân Số!</p>
-                <div id="sub-instruction" class="text-[10px] sm:text-[11px] text-amber-300/80 mt-0.5 font-semibold">Hãy chuẩn bị chọn chiếc cặp cá nhân của bạn.</div>
+                <div id="sub-instruction" class="text-[10px] sm:text-[11px] text-amber-300/80 mt-0.5 font-semibold">Hãy chuẩn bị chọn cặp cá nhân của bạn.</div>
             </div>
 
-            <div id="user-briefcase-card" class="glass-panel rounded-xl p-2.5 sm:p-3 text-center shadow-xl border border-amber-500/40 flex items-center justify-between">
+            <div id="user-briefcase-card" class="glass-panel rounded-xl p-2 sm:p-2.5 text-center shadow-xl border border-amber-500/40 flex items-center justify-between">
                 <div class="text-left">
-                    <span class="text-[9px] sm:text-[10px] uppercase tracking-widest text-amber-400 font-bold block">Cặp Cá Nhân CỦA BẠN</span>
-                    <div id="user-case-label" class="text-xs sm:text-base font-black text-slate-200 mt-0.5">Chưa chọn</div>
+                    <span class="text-[9px] uppercase tracking-widest text-amber-400 font-bold block">Cặp Cá Nhân CỦA BẠN</span>
+                    <div id="user-case-label" class="text-xs sm:text-sm font-black text-slate-200 mt-0.5">Chưa chọn</div>
                 </div>
-                <div id="user-case-box-preview" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-slate-400 text-sm sm:text-base shadow-inner">
+                <div id="user-case-box-preview" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-slate-400 text-xs sm:text-sm shadow-inner transition-all duration-500">
                     ?
                 </div>
             </div>
         </section>
 
         <!-- LEFT PRIZE BOARD (Blue 1-13) -->
-        <section aria-label="Bảng giá trị nhỏ" class="lg:col-span-3 glass-panel rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-2xl flex flex-col space-y-1 order-2 lg:order-2">
-            <div class="text-center pb-0.5 sm:pb-1 border-b border-cyan-500/20 flex lg:block justify-between items-center px-1">
-                <span class="text-[10px] sm:text-[11px] font-black tracking-widest text-cyan-400 uppercase">Mức Giá Trị Nhỏ</span>
+        <section aria-label="Bảng giá trị nhỏ" class="lg:col-span-3 w-full glass-panel rounded-xl p-2.5 sm:p-3 shadow-2xl flex flex-col space-y-2 order-2 lg:order-2">
+            <div class="text-center pb-1.5 border-b border-cyan-500/20 flex lg:block justify-between items-center px-1">
+                <span class="text-[10px] sm:text-xs font-black tracking-widest text-cyan-400 uppercase">Mức Giá Nhỏ</span>
                 <span class="text-[8px] sm:text-[9px] text-slate-400">1.000 - 500.000</span>
             </div>
-            <div id="blue-prizes" class="grid grid-cols-3 sm:grid-cols-4 lg:flex lg:flex-col gap-1"></div>
+            <!-- Mobile/Tablet hiển thị 2 cột, desktop 1 cột -->
+            <div id="blue-prizes" class="grid grid-cols-2 lg:grid-cols-1 gap-1.5 w-full"></div>
         </section>
 
         <!-- CENTER STUDIO STAGE (26 BRIEFCASES) -->
-        <section aria-label="Khu vực sân khấu chính" class="lg:col-span-6 flex flex-col items-center space-y-3 order-4 lg:order-3">
-            <div class="w-full glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-2xl">
-                <div class="text-center mb-2 sm:mb-3">
-                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Danh Sách 26 Chiếc Cặp Trên Sân Khấu</span>
+        <section aria-label="Khu vực sân khấu chính" class="lg:col-span-6 flex flex-col items-center space-y-2 order-4 lg:order-3 w-full">
+            <div class="w-full glass-panel rounded-xl p-3 sm:p-5 shadow-2xl">
+                <div class="text-center mb-2">
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Danh Sách 26 chiếc Cặp Trên Sân Khấu</span>
                 </div>
-                <!-- Dynamic Stage Layout Container -->
                 <div class="w-full flex flex-col items-center gap-2 sm:gap-3" id="cases-grid"></div>
             </div>
         </section>
 
         <!-- RIGHT PRIZE BOARD (Red 14-26) -->
-        <section aria-label="Bảng giá trị lớn" class="lg:col-span-3 glass-panel rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-2xl flex flex-col space-y-1 order-3 lg:order-4">
-            <div class="text-center pb-0.5 sm:pb-1 border-b border-rose-500/20 flex lg:block justify-between items-center px-1">
-                <span class="text-[10px] sm:text-[11px] font-black tracking-widest text-rose-500 uppercase">Mức Giá Trị Lớn</span>
+        <section aria-label="Bảng giá trị lớn" class="lg:col-span-3 w-full glass-panel rounded-xl p-2.5 sm:p-3 shadow-2xl flex flex-col space-y-2 order-3 lg:order-4">
+            <div class="text-center pb-1.5 border-b border-rose-500/20 flex lg:block justify-between items-center px-1">
+                <span class="text-[10px] sm:text-xs font-black tracking-widest text-rose-500 uppercase">Mức Giá Lớn</span>
                 <span class="text-[8px] sm:text-[9px] text-slate-400">1.000.000 - 100.000.000</span>
             </div>
-            <div id="red-prizes" class="grid grid-cols-3 sm:grid-cols-4 lg:flex lg:flex-col gap-1"></div>
+            <!-- Mobile/Tablet hiển thị 2 cột, desktop 1 cột -->
+            <div id="red-prizes" class="grid grid-cols-2 lg:grid-cols-1 gap-1.5 w-full"></div>
+        </section>
+
+        <!-- BOTTOM PANELS: DROPDOWN HISTORY LOGS -->
+        <section class="lg:col-span-12 w-full grid grid-cols-1 md:grid-cols-2 gap-2.5 order-5 mt-1">
+            
+            <!-- 1. LỊCH SỬ MỞ CẶP -->
+            <div class="glass-panel rounded-xl shadow-xl overflow-hidden">
+                <button onclick="toggleDropdown('opened-cases-dropdown', 'opened-arrow')" class="w-full p-2.5 sm:p-3 flex items-center justify-between bg-slate-900/60 hover:bg-slate-800/80 transition-colors focus:outline-none">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1">
+                            🧰 Lịch Sử Mở Cặp
+                        </span>
+                        <span id="opened-history-count" class="text-[10px] text-slate-400 font-semibold bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
+                            0 / 25
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-1 text-slate-400 text-xs font-bold">
+                        <span>Chi tiết</span>
+                        <svg id="opened-arrow" class="w-4 h-4 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </button>
+                <div id="opened-cases-dropdown" class="dropdown-content px-3">
+                    <div id="opened-cases-history-list" class="overflow-y-auto max-h-48 py-2 space-y-1 text-xs text-slate-300 border-t border-slate-800/80">
+                        <div class="text-center text-slate-500 py-3 text-[11px] italic">Chưa mở cặp nào...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. LỊCH SỬ NGÂN HÀNG -->
+            <div class="glass-panel rounded-xl shadow-xl overflow-hidden">
+                <button onclick="toggleDropdown('banker-offers-dropdown', 'banker-arrow')" class="w-full p-2.5 sm:p-3 flex items-center justify-between bg-slate-900/60 hover:bg-slate-800/80 transition-colors focus:outline-none">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1">
+                            📞 Lịch Sử Ngân Hàng
+                        </span>
+                        <span id="banker-history-count" class="text-[10px] text-slate-400 font-semibold bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
+                            0 Cuộc gọi
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-1 text-slate-400 text-xs font-bold">
+                        <span>Chi tiết</span>
+                        <svg id="banker-arrow" class="w-4 h-4 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </button>
+                <div id="banker-offers-dropdown" class="dropdown-content px-3">
+                    <div id="banker-offers-history-list" class="overflow-y-auto max-h-48 py-2 space-y-1 text-xs text-slate-300 border-t border-slate-800/80">
+                        <div class="text-center text-slate-500 py-3 text-[11px] italic">Chưa có cuộc gọi nào từ Ngân hàng...</div>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
     </main>
 
     <!-- REVEALED PRIZE POPUP MODAL -->
-    <div id="reveal-popup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-panel-active rounded-3xl max-w-xs sm:max-w-sm w-full p-5 sm:p-6 text-center shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="reveal-modal-box">
-            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-2.5 text-xl sm:text-2xl font-black border border-amber-500/40 pulse-glow">
+    <div id="reveal-popup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-50 hidden opacity-0 flex items-center justify-center p-4 modal-overlay">
+        <div class="glass-panel-active rounded-3xl max-w-xs w-full p-5 text-center shadow-2xl transform scale-90 opacity-0 modal-card" id="reveal-modal-box">
+            <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-2.5 text-xl font-black border border-amber-500/40 pulse-glow">
                 🧰
             </div>
             <span id="reveal-popup-title" class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest block">Cặp Số [?] Vừa Mở</span>
-            <div id="reveal-popup-amount" class="text-2xl sm:text-4xl font-black text-amber-400 mt-2 led-glow">0</div>
+            <div id="reveal-popup-amount" class="text-2xl sm:text-3xl font-black text-amber-400 mt-2 led-glow">0</div>
         </div>
     </div>
 
     <!-- BANKER OFFER MODAL -->
-    <div id="banker-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-panel-active rounded-3xl max-w-sm sm:max-w-md w-full p-6 sm:p-8 text-center shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="banker-modal-content">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-500/20 text-amber-400 rounded-3xl flex items-center justify-center mx-auto mb-3 text-2xl sm:text-3xl font-black border border-amber-500/40 shadow-lg pulse-glow">
+    <div id="banker-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl z-50 hidden opacity-0 flex items-center justify-center p-4 modal-overlay">
+        <div class="glass-panel-active rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl transform scale-90 opacity-0 modal-card" id="banker-modal-content">
+            <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-3xl flex items-center justify-center mx-auto mb-3 text-2xl font-black border border-amber-500/40 shadow-lg pulse-glow">
                 📞
             </div>
-            <h2 class="text-xl sm:text-2xl font-black text-amber-400 tracking-wide uppercase">CUỘC GỌI TỪ NGÂN HÀNG</h2>
-            <p class="text-[11px] sm:text-xs text-slate-300 mt-1">Ngân hàng đã tính toán xác suất dựa trên các chiếc cặp còn lại...</p>
+            <h2 class="text-lg sm:text-xl font-black text-amber-400 tracking-wide uppercase">CUỘC GỌI TỪ NGÂN HÀNG</h2>
+            <p class="text-[11px] text-slate-300 mt-1">Ngân hàng đã tính toán xác suất dựa trên các cặp còn lại...</p>
             
-            <div class="my-4 sm:my-6 bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-inner">
-                <span class="text-[10px] sm:text-[11px] text-slate-400 uppercase tracking-widest font-semibold block">Đề Nghị Mua Lại Chiếc Cặp <span id="banker-case-num" class="text-amber-400 font-bold"></span></span>
-                <div id="banker-offer-display" class="text-2xl sm:text-4xl font-black text-emerald-400 mt-1.5 led-glow">0</div>
+            <div class="my-4 bg-slate-900/90 rounded-2xl p-4 border border-slate-800 shadow-inner">
+                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold block">Đề Nghị Mua Lại Cặp <span id="banker-case-num" class="text-amber-400 font-bold"></span></span>
+                <div id="banker-offer-display" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1 led-glow">0</div>
             </div>
 
-            <!-- BUTTONS CHOICES -->
-            <div id="banker-buttons-group" class="grid grid-cols-2 gap-3 sm:gap-4">
-                <button onclick="acceptBankerDeal()" class="w-full py-3.5 bg-emerald-600 active:bg-emerald-500 text-white font-black rounded-2xl shadow-lg active:scale-95 text-xs sm:text-base uppercase tracking-wider">
+            <div id="banker-buttons-group" class="grid grid-cols-2 gap-3">
+                <button onclick="acceptBankerDeal()" class="w-full py-3 bg-emerald-600 active:bg-emerald-500 text-white font-black rounded-xl shadow-lg active:scale-95 text-xs uppercase tracking-wider transition-all">
                     CHẤP NHẬN
                 </button>
-                <button onclick="rejectBankerDeal()" class="w-full py-3.5 bg-rose-600 active:bg-rose-500 text-white font-black rounded-2xl shadow-lg active:scale-95 text-xs sm:text-base uppercase tracking-wider">
+                <button onclick="rejectBankerDeal()" class="w-full py-3 bg-rose-600 active:bg-rose-500 text-white font-black rounded-xl shadow-lg active:scale-95 text-xs uppercase tracking-wider transition-all">
                     KHÔNG CHẤP NHẬN
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- GAME OVER / FINAL RESULT MODAL -->
-    <div id="gameover-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-panel-active rounded-3xl max-w-sm sm:max-w-md w-full p-6 sm:p-8 text-center shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="gameover-modal-content">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/20 text-cyan-400 rounded-3xl flex items-center justify-center mx-auto mb-3 text-2xl sm:text-3xl font-black border border-cyan-500/40 shadow-lg">
+    <!-- GAME OVER MODAL -->
+    <div id="gameover-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl z-50 hidden opacity-0 flex items-center justify-center p-4 modal-overlay">
+        <div class="glass-panel-active rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl transform scale-90 opacity-0 modal-card" id="gameover-modal-content">
+            <div class="w-16 h-16 bg-cyan-500/20 text-cyan-400 rounded-3xl flex items-center justify-center mx-auto mb-3 text-2xl font-black border border-cyan-500/40 shadow-lg">
                 🏆
             </div>
-            <h2 id="gameover-title" class="text-xl sm:text-2xl font-black text-amber-400 uppercase">KẾT QUẢ CHUNG CUỘC</h2>
-            <p id="gameover-desc" class="text-xs sm:text-sm text-slate-300 mt-1.5">Trò chơi Đi Tìm Ân Số đã chính thức khép lại.</p>
+            <h2 id="gameover-title" class="text-lg sm:text-xl font-black text-amber-400 uppercase">KẾT QUẢ CHUNG CUỘC</h2>
+            <p id="gameover-desc" class="text-xs text-slate-300 mt-1">Trò chơi Đi Tìm Ân Số đã khép lại.</p>
             
-            <div class="my-4 sm:my-6 bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-inner">
-                <span class="text-[10px] sm:text-[11px] text-slate-400 uppercase tracking-widest font-semibold block">TIỀN THƯỞNG NHẬN ĐƯỢC</span>
-                <div id="final-prize-display" class="text-2xl sm:text-4xl font-black text-amber-400 mt-1.5 led-glow">0</div>
-                <div id="user-original-reveal-desc" class="text-xs text-slate-400 mt-2 font-medium">Chiếc cặp cá nhân của bạn chứa: ...</div>
+            <div class="my-4 bg-slate-900/90 rounded-2xl p-4 border border-slate-800 shadow-inner">
+                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold block">TIỀN THƯỞNG NHẬN ĐƯỢC</span>
+                <div id="final-prize-display" class="text-2xl sm:text-3xl font-black text-amber-400 mt-2 led-glow">0</div>
+                <div id="user-original-reveal-desc" class="text-xs text-slate-400 mt-2 font-medium">Cặp cá nhân của bạn chứa: ...</div>
             </div>
 
-            <button onclick="resetGame()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black rounded-2xl shadow-xl active:scale-95 uppercase tracking-wider text-sm sm:text-base">
+            <button onclick="resetGame()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black rounded-xl shadow-xl active:scale-95 uppercase tracking-wider text-xs transition-all hover:brightness-110">
                 Chơi Ván Mới
             </button>
         </div>
     </div>
 
-    <!-- JAVASCRIPT GAME ENGINE & SOUND SYSTEM -->
-    <script>
-        const AMOUNTS = [
-            1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000, 50000, 75000, 100000, 250000, 500000,
-            1000000, 1250000, 1500000, 2000000, 3000000, 4000000, 5000000, 10000000, 15000000, 20000000, 25000000, 50000000, 100000000
-        ];
-
-        const ROUND_QUOTAS = [6, 5, 4, 3, 2, 1, 1, 1, 1, 1];
-
-        let gameState = {
-            playerName: "Thí Sinh",
-            cases: {},
-            openedCases: [],
-            userPersonalCase: null,
-            phase: 'WELCOME',
-            currentRound: 0,
-            casesOpenedThisRound: 0,
-            currentBankerOffer: 0,
-            acceptedDealAmount: null,
-            hasAcceptedDealBefore: false,
-            audioEnabled: true,
-            isLocked: false
-        };
-
-        let highlightedPrizeVal = null;
-        let audioCtx = null;
-
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playSound(type, amount = 0) {
-            if (!gameState.audioEnabled) return;
-            try {
-                initAudioContext();
-                if (!audioCtx) return;
-                const now = audioCtx.currentTime;
-
-                if (type === 'click') {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(350, now);
-                    osc.frequency.exponentialRampToValueAtTime(700, now + 0.05);
-                    gain.gain.setValueAtTime(0.05, now);
-                    gain.gain.linearRampToValueAtTime(0.005, now + 0.05);
-                    osc.start(now);
-                    osc.stop(now + 0.05);
-                } else if (type === 'open') {
-                    if (amount < 1000000) {
-                        const notes = [523.25, 659.25, 783.99];
-                        notes.forEach((freq, idx) => {
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.type = 'sine';
-                            o.frequency.setValueAtTime(freq, now + idx * 0.1);
-                            g.gain.setValueAtTime(0.08, now + idx * 0.1);
-                            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
-                            o.start(now + idx * 0.1);
-                            o.stop(now + idx * 0.1 + 0.3);
-                        });
-                    } else if (amount >= 1000000 && amount < 10000000) {
-                        const notes = [329.63, 392.00];
-                        notes.forEach((freq, idx) => {
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.type = 'sine';
-                            o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                            g.gain.setValueAtTime(0.09, now + idx * 0.15);
-                            g.gain.linearRampToValueAtTime(0.005, now + idx * 0.15 + 0.35);
-                            o.start(now + idx * 0.15);
-                            o.stop(now + idx * 0.15 + 0.35);
-                        });
-                    } else if (amount >= 10000000 && amount < 50000000) {
-                        const notes = [220.00, 261.63, 329.63];
-                        notes.forEach((freq, idx) => {
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.type = 'triangle';
-                            o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                            g.gain.setValueAtTime(0.08, now + idx * 0.12);
-                            g.gain.exponentialRampToValueAtTime(0.002, now + idx * 0.12 + 0.4);
-                            o.start(now + idx * 0.12);
-                            o.stop(now + idx * 0.12 + 0.4);
-                        });
-                    } else {
-                        const notes = [174.61, 220.00, 261.63];
-                        notes.forEach((freq, idx) => {
-                            const o = audioCtx.createOscillator();
-                            const g = audioCtx.createGain();
-                            o.connect(g);
-                            g.connect(audioCtx.destination);
-                            o.type = 'sine';
-                            o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                            g.gain.setValueAtTime(0.1, now + idx * 0.15);
-                            g.gain.linearRampToValueAtTime(0.001, now + idx * 0.15 + 0.5);
-                            o.start(now + idx * 0.15);
-                            o.stop(now + idx * 0.15 + 0.5);
-                        });
-                    }
-                } else if (type === 'banker') {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.setValueAtTime(554.37, now + 0.15);
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.linearRampToValueAtTime(0.005, now + 0.35);
-                    osc.start(now);
-                    osc.stop(now + 0.35);
-                } else if (type === 'win') {
-                    const notes = [523.25, 659.25, 783.99, 1046.50];
-                    notes.forEach((freq, idx) => {
-                        const o = audioCtx.createOscillator();
-                        const g = audioCtx.createGain();
-                        o.connect(g);
-                        g.connect(audioCtx.destination);
-                        o.type = 'sine';
-                        o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                        g.gain.setValueAtTime(0.1, now + idx * 0.15);
-                        g.gain.linearRampToValueAtTime(0.005, now + idx * 0.15 + 0.4);
-                        o.start(now + idx * 0.15);
-                        o.stop(now + idx * 0.15 + 0.4);
-                    });
-                }
-            } catch (e) {
-                console.log("Audio error:", e);
-            }
-        }
-
-        function toggleAudio() {
-            gameState.audioEnabled = !gameState.audioEnabled;
-            const btn = document.getElementById('audio-toggle-btn');
-            btn.innerText = gameState.audioEnabled ? '🔊' : '🔇';
-            btn.title = gameState.audioEnabled ? 'Tắt âm thanh' : 'Bật âm thanh';
-        }
-
-        function formatMoney(amount) {
-            return amount.toLocaleString('vi-VN');
-        }
-
-        function startGameSession() {
-            const inputVal = document.getElementById('player-name-input').value.trim();
-            if (inputVal) gameState.playerName = inputVal;
-
-            playSound('click');
-            const welcomeScreen = document.getElementById('welcome-screen');
-            welcomeScreen.classList.add('opacity-0', 'backdrop-blur-none');
-            setTimeout(() => {
-                welcomeScreen.classList.add('hidden');
-            }, 400);
-            
-            resetGameData();
-        }
-
-        function resetGameData() {
-            // NÂNG CẤP ĐỘ NGẪU NHIÊN: Sử dụng thuật toán Fisher-Yates shuffle chạy nhiều vòng lặp liên tiếp 
-            // để đảm bảo tỷ lệ xáo trộn giá trị các chiếc cặp đạt độ hỗn loạn và ngẫu nhiên tuyệt đối, loại bỏ hoàn toàn độ lệch của hàm sort cũ.
-            let shuffled = [...AMOUNTS];
-            for (let round = 0; round < 3; round++) {
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-            }
-            // Thêm một lượt hoán đổi ngẫu nhiên phụ để tăng độ phân tán giá trị lớn/nhỏ
-            for (let k = 0; k < 10; k++) {
-                const idx1 = Math.floor(Math.random() * shuffled.length);
-                const idx2 = Math.floor(Math.random() * shuffled.length);
-                [shuffled[idx1], shuffled[idx2]] = [shuffled[idx2], shuffled[idx1]];
-            }
-
-            gameState.cases = {};
-            for (let i = 1; i <= 26; i++) {
-                gameState.cases[i] = shuffled[i - 1];
-            }
-            gameState.openedCases = [];
-            gameState.userPersonalCase = null;
-            gameState.phase = 'SELECT_PERSONAL_CASE';
-            gameState.currentRound = 0;
-            gameState.casesOpenedThisRound = 0;
-            gameState.currentBankerOffer = 0;
-            gameState.acceptedDealAmount = null;
-            gameState.hasAcceptedDealBefore = false;
-            gameState.isLocked = false;
-            highlightedPrizeVal = null;
-
-            document.getElementById('banker-modal').classList.add('hidden');
-            document.getElementById('gameover-modal').classList.add('hidden');
-            document.getElementById('reveal-popup-modal').classList.add('hidden');
-
-            renderAll();
-        }
-
-        function confirmReset() {
-            if (confirm("Bạn có chắc chắn muốn bắt đầu lại ván chơi không?")) {
-                resetGameData();
-            }
-        }
-
-        function resetGame() {
-            const modal = document.getElementById('gameover-modal');
-            const content = document.getElementById('gameover-modal-content');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                resetGameData();
-            }, 300);
-        }
-
-        function renderAll() {
-            renderPrizesBoards();
-            renderCasesGrid();
-            renderInstructionBanner();
-            renderUserPersonalCasePreview();
-        }
-
-        function renderPrizesBoards() {
-            const blueContainer = document.getElementById('blue-prizes');
-            const redContainer = document.getElementById('red-prizes');
-            blueContainer.innerHTML = '';
-            redContainer.innerHTML = '';
-
-            const blueAmounts = AMOUNTS.slice(0, 13);
-            const redAmounts = AMOUNTS.slice(13, 26);
-
-            blueAmounts.forEach(val => {
-                const opened = isAmountOpenedOrPersonal(val);
-                const isHighlighted = (val === highlightedPrizeVal);
-                const div = document.createElement('div');
-                div.id = `prize-item-${val}`;
-
-                let cssClasses = "py-0.5 sm:py-1 px-1 sm:px-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs lg:text-sm font-black text-center transition-all duration-300 ";
-                if (isHighlighted) {
-                    cssClasses += "highlight-prize";
-                } else if (opened) {
-                    cssClasses += "bg-slate-900/40 text-slate-600 line-through border border-slate-800 scale-95 opacity-50";
-                } else {
-                    cssClasses += "bg-cyan-950/70 text-cyan-300 border border-cyan-800/40 shadow-sm";
-                }
-
-                div.className = cssClasses;
-                div.innerText = formatMoney(val);
-                blueContainer.appendChild(div);
-            });
-
-            redAmounts.forEach(val => {
-                const opened = isAmountOpenedOrPersonal(val);
-                const isHighlighted = (val === highlightedPrizeVal);
-                const div = document.createElement('div');
-                div.id = `prize-item-${val}`;
-
-                let cssClasses = "py-0.5 sm:py-1 px-1 sm:px-2 rounded-md sm:rounded-lg text-[10px] sm:text-xs lg:text-sm font-black text-center transition-all duration-300 ";
-                if (isHighlighted) {
-                    cssClasses += "highlight-prize";
-                } else if (opened) {
-                    cssClasses += "bg-slate-900/40 text-slate-600 line-through border border-slate-800 scale-95 opacity-50";
-                } else {
-                    cssClasses += "bg-rose-950/70 text-rose-400 border border-rose-800/40 shadow-sm";
-                }
-
-                div.className = cssClasses;
-                div.innerText = formatMoney(val);
-                redContainer.appendChild(div);
-            });
-        }
-
-        function isAmountOpenedOrPersonal(val) {
-            for (let cNum of gameState.openedCases) {
-                if (gameState.cases[cNum] === val) return true;
-            }
-            return false;
-        }
-
-        function renderCasesGrid() {
-            const grid = document.getElementById('cases-grid');
-            grid.innerHTML = '';
-
-            const rowLayout = [5, 5, 6, 5, 5];
-            let caseNumber = 1;
-
-            rowLayout.forEach((count) => {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'flex justify-center gap-2 sm:gap-3.5 w-full';
-
-                for (let j = 0; j < count; j++) {
-                    if (caseNumber > 26) break;
-                    const i = caseNumber;
-                    const isOpened = gameState.openedCases.includes(i);
-                    const isUserCase = gameState.userPersonalCase === i;
-
-                    const wrapper = document.createElement('div');
-                    wrapper.className = `briefcase w-12 h-12 sm:w-16 sm:h-16 aspect-square rounded-xl sm:rounded-2xl relative ${isOpened ? 'opened' : ''} ${isUserCase ? 'user-personal' : ''}`;
-                    
-                    let innerHtml = `
-                        <div class="briefcase-inner">
-                            <div class="briefcase-front flex items-center justify-center relative p-1">
-                                <span class="text-sm sm:text-2xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
-                                ${isUserCase ? '<span class="absolute top-0.5 right-0.5 text-[6px] sm:text-[8px] bg-amber-500 text-slate-950 font-black px-0.5 sm:px-1 rounded">ĐÃ ĐƯỢC CHỌN</span>' : ''}
-                            </div>
-                            <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
-                                <span class="text-[7px] sm:text-[9px] text-slate-500 font-bold">${i}</span>
-                                <span class="text-[8px] sm:text-xs font-black text-slate-200 px-0.5 truncate w-full text-center">${formatMoney(gameState.cases[i])}</span>
-                            </div>
-                        </div>
-                    `;
-                    wrapper.innerHTML = innerHtml;
-
-                    if (!isOpened) {
-                        wrapper.onclick = () => handleCaseClick(i);
-                    }
-                    rowDiv.appendChild(wrapper);
-                    caseNumber++;
-                }
-                grid.appendChild(rowDiv);
-            });
-        }
-
-        function renderUserPersonalCasePreview() {
-            const label = document.getElementById('user-case-label');
-            const previewBox = document.getElementById('user-case-box-preview');
-
-            if (gameState.userPersonalCase === null) {
-                label.innerText = "Chưa chọn (Giữ kín)";
-                previewBox.innerText = "?";
-                previewBox.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-slate-400 text-sm sm:text-base shadow-inner";
-            } else {
-                label.innerText = `Cặp số ${gameState.userPersonalCase} đã niêm phong`;
-                previewBox.innerText = gameState.userPersonalCase;
-                previewBox.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-500 border border-amber-300 flex items-center justify-center font-black text-slate-950 text-base sm:text-lg shadow-lg pulse-glow scale-105";
-            }
-        }
-
-        function renderInstructionBanner() {
-            const textEl = document.getElementById('instruction-text');
-            const subEl = document.getElementById('sub-instruction');
-            const statusBadge = document.getElementById('status-badge');
-
-            if (gameState.phase === 'SELECT_PERSONAL_CASE') {
-                statusBadge.innerText = "Bước 1: Chọn Cặp Cá Nhân";
-                textEl.innerText = `${gameState.playerName}, hãy chọn 1 chiếc cặp giữ riêng cho bạn!`;
-                subEl.innerText = "Nhấn vào 1 chiếc cặp bất kỳ trên sân khấu.";
-            } else if (gameState.phase === 'OPENING_CASES') {
-                const quota = ROUND_QUOTAS[gameState.currentRound];
-                const leftToOpen = quota - gameState.casesOpenedThisRound;
-                statusBadge.innerText = `Vòng ${gameState.currentRound + 1}`;
-                textEl.innerText = gameState.hasAcceptedDealBefore ? "Đã DEAL thành công. Tiếp tục mở các cặp trên sân khấu." : "Mở các chiếc cặp trên sân khấu theo quy định vòng chơi.";
-                subEl.innerText = `Cần mở thêm: ${leftToOpen} chiếc cặp nữa.`;
-            } else if (gameState.phase === 'BANKER_OFFER') {
-                statusBadge.innerText = "Ngân Hàng Gọi Điện";
-                textEl.innerText = "Cuộc gọi từ Ngân hàng! Hãy xem xét lời đề nghị.";
-                subEl.innerText = "Đưa ra quyết định DEAL (Bán) hoặc NO DEAL (Tiếp tục).";
-            } else if (gameState.phase === 'FINAL_SWAP') {
-                statusBadge.innerText = "Vòng Áp Chót";
-                textEl.innerText = "Chỉ còn 2 chiếc cặp! Mở chiếc cặp áp chót trước khi chốt chung cuộc.";
-                subEl.innerText = "Click chọn chiếc cặp cuối cùng trên sân khấu.";
-            } else if (gameState.phase === 'GAME_OVER') {
-                statusBadge.innerText = "Trò Chơi Kết Thúc";
-                textEl.innerText = "Chương trình khép lại với phần thưởng cuối cùng.";
-                subEl.innerText = "Nhấn 'Chơi Lại' để bắt đầu ván mới.";
-            }
-        }
-
-        function handleCaseClick(caseNum) {
-            if (gameState.isLocked) return;
-            playSound('click');
-
-            if (gameState.phase === 'SELECT_PERSONAL_CASE') {
-                gameState.userPersonalCase = caseNum;
-                gameState.phase = 'OPENING_CASES';
-                gameState.currentRound = 0;
-                gameState.casesOpenedThisRound = 0;
-                renderAll();
-            } else if (gameState.phase === 'OPENING_CASES' || gameState.phase === 'FINAL_SWAP') {
-                if (caseNum === gameState.userPersonalCase) {
-                    alert("Đây là chiếc cặp cá nhân bạn đang giữ kín, không thể mở lúc này!");
-                    return;
-                }
-
-                gameState.isLocked = true;
-                const val = gameState.cases[caseNum];
-
-                playSound('open', val);
-                
-                gameState.openedCases.push(caseNum);
-                gameState.casesOpenedThisRound++;
-
-                renderCasesGrid();
-                
-                showPrizeRevealPopup(caseNum, val, () => {
-                    highlightedPrizeVal = val;
-                    renderPrizesBoards();
-
-                    setTimeout(() => {
-                        highlightedPrizeVal = null;
-                        renderPrizesBoards();
-                    }, 2000);
-
-                    gameState.isLocked = false;
-
-                    let unOpened = [];
-                    for (let i = 1; i <= 26; i++) {
-                        if (i !== gameState.userPersonalCase && !gameState.openedCases.includes(i)) {
-                            unOpened.push(i);
-                        }
-                    }
-
-                    if (unOpened.length === 0 && gameState.phase === 'FINAL_SWAP') {
-                        setTimeout(() => {
-                            triggerFinalPersonalCaseReveal();
-                        }, 400);
-                        return;
-                    }
-
-                    if (unOpened.length === 1 && gameState.phase !== 'FINAL_SWAP') {
-                        setTimeout(() => {
-                            triggerBankerOfferModal();
-                        }, 400);
-                        return;
-                    }
-
-                    const quota = ROUND_QUOTAS[gameState.currentRound] || 1;
-                    if (gameState.casesOpenedThisRound >= quota && gameState.phase !== 'FINAL_SWAP') {
-                        setTimeout(() => {
-                            triggerBankerOfferModal();
-                        }, 400);
-                    } else {
-                        renderAll();
-                    }
-                });
-            }
-        }
-
-        function showPrizeRevealPopup(caseNum, val, callback) {
-            const popupModal = document.getElementById('reveal-popup-modal');
-            const modalBox = document.getElementById('reveal-modal-box');
-            const titleEl = document.getElementById('reveal-popup-title');
-            const amountEl = document.getElementById('reveal-popup-amount');
-
-            titleEl.innerText = `Cặp Số ${caseNum} Vừa Mở Chứa Giá Trị:`;
-            amountEl.innerText = formatMoney(val);
-            
-            popupModal.classList.remove('hidden');
-            setTimeout(() => {
-                modalBox.classList.remove('scale-95', 'opacity-0');
-                modalBox.classList.add('scale-100', 'opacity-100');
-            }, 20);
-
-            const textEl = document.getElementById('instruction-text');
-            const subEl = document.getElementById('sub-instruction');
-            textEl.innerHTML = `Cặp số <span class="text-amber-400 font-black">[${caseNum}]</span> chứa: <span class="text-rose-400 font-black">${formatMoney(val)}</span>`;
-            subEl.innerText = "Đang hiển thị giá trị...";
-
-            setTimeout(() => {
-                modalBox.classList.remove('scale-100', 'opacity-100');
-                modalBox.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => {
-                    popupModal.classList.add('hidden');
-                    if (callback) callback();
-                }, 300);
-            }, 1800);
-        }
-
-        function triggerFinalPersonalCaseReveal() {
-            playSound('win');
-            gameState.phase = 'GAME_OVER';
-
-            const personalVal = gameState.cases[gameState.userPersonalCase];
-            const finalDisplayBox = document.getElementById('final-prize-display');
-            
-            if (gameState.hasAcceptedDealBefore) {
-                document.getElementById('gameover-title').innerText = "KẾT QUẢ CHUNG CUỘC";
-                document.getElementById('gameover-desc').innerText = `${gameState.playerName} đã chốt giá chào mua thành công với Ngân hàng!`;
-                
-                finalDisplayBox.style.display = 'block';
-                finalDisplayBox.className = 'text-2xl sm:text-4xl font-black text-emerald-400 mt-2 led-glow';
-                finalDisplayBox.innerText = formatMoney(gameState.acceptedDealAmount);
-
-                document.getElementById('user-original-reveal-desc').innerHTML = `
-                    <div class="pt-2 border-t border-slate-800">Giá trị thực tế trong cặp <span class="text-amber-400 font-bold">[${gameState.userPersonalCase}]</span>: <span class="text-amber-400 font-bold">${formatMoney(personalVal)}</span></div>
-                `;
-            } else {
-                document.getElementById('gameover-title').innerText = `MỞ CẶP CÁ NHÂN [${gameState.userPersonalCase}]`;
-                document.getElementById('gameover-desc').innerText = `Tất cả các cặp trên sân khấu đã được mở. Đây là giá trị trong chiếc cặp của bạn!`;
-                
-                finalDisplayBox.style.display = 'block';
-                finalDisplayBox.className = 'text-2xl sm:text-4xl font-black text-amber-400 mt-2 led-glow';
-                finalDisplayBox.innerText = formatMoney(personalVal);
-
-                document.getElementById('user-original-reveal-desc').innerHTML = `Chiếc cặp cá nhân số <span class="text-amber-400 font-bold">[${gameState.userPersonalCase}]</span> thuộc về bạn!`;
-            }
-
-            const modal = document.getElementById('gameover-modal');
-            const content = document.getElementById('gameover-modal-content');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 50);
-            renderAll();
-        }
-
-        function triggerBankerOfferModal() {
-            playSound('banker');
-            gameState.phase = 'BANKER_OFFER';
-            renderInstructionBanner();
-
-            let remainingVals = [];
-            for (let i = 1; i <= 26; i++) {
-                if (i !== gameState.userPersonalCase && !gameState.openedCases.includes(i)) {
-                    remainingVals.push(gameState.cases[i]);
-                }
-            }
-            remainingVals.push(gameState.cases[gameState.userPersonalCase]);
-
-            const sum = remainingVals.reduce((a, b) => a + b, 0);
-            const avg = sum / remainingVals.length;
-
-            const riskFactor = Math.min(0.12 + (gameState.currentRound * 0.085), 0.94);
-            let offer = Math.round(avg * riskFactor);
-
-            if (offer > 10000000) {
-                offer = Math.round(offer / 1000000) * 1000000;
-            } else if (offer > 1000000) {
-                offer = Math.round(offer / 100000) * 100000;
-            } else {
-                offer = Math.round(offer / 10000) * 10000;
-            }
-            if (offer < 1000) offer = 1000;
-
-            gameState.currentBankerOffer = offer;
-            document.getElementById('banker-offer-display').innerText = formatMoney(offer);
-            document.getElementById('banker-case-num').innerText = `SỐ [${gameState.userPersonalCase}]`;
-
-            const buttonsGroup = document.getElementById('banker-buttons-group');
-
-            if (gameState.hasAcceptedDealBefore) {
-                renderAcceptedDealButtons(buttonsGroup);
-            } else {
-                buttonsGroup.innerHTML = `
-                    <button onclick="acceptBankerDeal()" class="w-full py-3.5 bg-emerald-600 active:bg-emerald-500 text-white font-black rounded-2xl shadow-lg active:scale-95 text-xs sm:text-base uppercase tracking-wider">
-                        CHẤP NHẬN
-                    </button>
-                    <button onclick="rejectBankerDeal()" class="w-full py-3.5 bg-rose-600 active:bg-rose-500 text-white font-black rounded-2xl shadow-lg active:scale-95 text-xs sm:text-base uppercase tracking-wider">
-                        KHÔNG CHẤP NHẬN
-                    </button>
-                `;
-            }
-
-            const modal = document.getElementById('banker-modal');
-            const modalContent = document.getElementById('banker-modal-content');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 50);
-        }
-
-        function renderAcceptedDealButtons(container) {
-            container.innerHTML = `
-                <div class="col-span-2 grid grid-cols-2 gap-3 sm:gap-4">
-                    <button onclick="continueOpeningAfterDeal()" class="w-full py-3 bg-cyan-600 active:bg-cyan-500 text-white font-black rounded-2xl shadow-lg active:scale-95 text-[10px] sm:text-xs uppercase tracking-wider">
-                        Tiếp Tục Mở Cặp
-                    </button>
-                    <button onclick="revealPersonalCaseNow()" class="w-full py-3 bg-amber-500 active:bg-amber-400 text-slate-950 font-black rounded-2xl shadow-lg active:scale-95 text-[10px] sm:text-xs uppercase tracking-wider">
-                        Mở Ngay Cặp Đã Chọn
-                    </button>
-                </div>
-            `;
-        }
-
-        function acceptBankerDeal() {
-            playSound('win');
-            gameState.hasAcceptedDealBefore = true;
-            gameState.acceptedDealAmount = gameState.currentBankerOffer;
-            const buttonsGroup = document.getElementById('banker-buttons-group');
-            renderAcceptedDealButtons(buttonsGroup);
-        }
-
-        function continueOpeningAfterDeal() {
-            closeBankerModal();
-            let unOpened = [];
-            for (let i = 1; i <= 26; i++) {
-                if (i !== gameState.userPersonalCase && !gameState.openedCases.includes(i)) {
-                    unOpened.push(i);
-                }
-            }
-
-            if (unOpened.length === 1) {
-                gameState.phase = 'FINAL_SWAP';
-                renderInstructionBanner();
-            } else {
-                gameState.currentRound++;
-                gameState.casesOpenedThisRound = 0;
-                gameState.phase = 'OPENING_CASES';
-                renderAll();
-            }
-        }
-
-        function revealPersonalCaseNow() {
-            closeBankerModal();
-            triggerFinalPersonalCaseReveal();
-        }
-
-        function rejectBankerDeal() {
-            playSound('click');
-            closeBankerModal();
-
-            let unOpened = [];
-            for (let i = 1; i <= 26; i++) {
-                if (i !== gameState.userPersonalCase && !gameState.openedCases.includes(i)) {
-                    unOpened.push(i);
-                }
-            }
-
-            if (unOpened.length === 1) {
-                gameState.phase = 'FINAL_SWAP';
-                renderInstructionBanner();
-            } else {
-                gameState.currentRound++;
-                gameState.casesOpenedThisRound = 0;
-                gameState.phase = 'OPENING_CASES';
-                renderAll();
-            }
-        }
-
-        function closeBankerModal() {
-            const modalContent = document.getElementById('banker-modal-content');
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                document.getElementById('banker-modal').classList.add('hidden');
-            }, 300);
-        }
-
-        window.onload = function() {
-            renderPrizesBoards();
-            renderCasesGrid();
-        };
-
-        window.onresize = function() {
-            renderCasesGrid();
-        };
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
