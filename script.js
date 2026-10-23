@@ -252,7 +252,7 @@ function renderPrizesBoards() {
         div.id = `prize-item-${val}`;
 
         const isLastItem = (idx === blueAmounts.length - 1);
-        let cssClasses = "py-1.5 px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all duration-300 ease-out ";
+        let cssClasses = "py-1.5 px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all duration-300 ease-out flex items-center justify-center ";
         if (isLastItem) {
             cssClasses += "col-span-2 lg:col-span-1 ";
         }
@@ -277,7 +277,7 @@ function renderPrizesBoards() {
         div.id = `prize-item-${val}`;
 
         const isLastItem = (idx === redAmounts.length - 1);
-        let cssClasses = "py-1.5 px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all duration-300 ease-out ";
+        let cssClasses = "py-1.5 px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all duration-300 ease-out flex items-center justify-center ";
         if (isLastItem) {
             cssClasses += "col-span-2 lg:col-span-1 ";
         }
@@ -323,17 +323,19 @@ function renderCasesGrid() {
             const wrapper = document.createElement('div');
             wrapper.className = `briefcase rounded-xl relative ${isOpened ? 'opened' : ''} ${isUserCase ? 'user-personal' : ''}`;
             
-            let innerHtml = `
-                <div class="briefcase-inner">
-                    <div class="briefcase-front flex items-center justify-center relative p-0.5">
-                        <span class="text-xs sm:text-lg font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
-                        ${isUserCase ? '<span class="absolute top-0.5 right-0.5 text-[5px] sm:text-[7px] bg-amber-500 text-slate-950 font-black px-0.5 rounded shadow">CHỌN</span>' : ''}
-                    </div>
-                    <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
-                        <span class="text-[6px] sm:text-[8px] text-slate-500 font-bold">${i}</span>
-                        <span class="text-[7px] sm:text-[10px] font-black text-slate-200 px-0.5 truncate w-full text-center">${formatMoney(gameState.cases[i])}</span>
-                    </div>
-                </div>
+           let innerHtml = `
+    <div class="briefcase-inner">
+        <div class="briefcase-front flex items-center justify-center relative p-0.5">
+            <!-- TĂNG KÍCH THƯỚC Ở ĐÂY: đổi text-xs sm:text-lg thành text-2xl sm:text-4xl hoặc to hơn nữa tùy thích -->
+            <span class="text-2xl sm:text-4xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
+            ${isUserCase ? '<span class="absolute top-1 right-1 text-[7px] sm:text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded shadow">CHỌN</span>' : ''}
+        </div>
+        <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
+            <span class="text-[6px] sm:text-[8px] text-slate-500 font-bold">${i}</span>
+            <span class="text-[7px] sm:text-[10px] font-black text-slate-200 px-0.5 truncate w-full text-center">${formatMoney(gameState.cases[i])}</span>
+        </div>
+    </div>
+
             `;
             wrapper.innerHTML = innerHtml;
 
@@ -599,7 +601,7 @@ function triggerFinalPersonalCaseReveal() {
             <div class="pt-2 border-t border-slate-800">Giá trị thực tế trong cặp <span class="text-amber-400 font-bold">[${gameState.userPersonalCase}]</span>: <span class="text-amber-400 font-bold">${formatMoney(personalVal)}</span></div>
         `;
     } else {
-        document.getElementById('gameover-title').innerText = `MỞ CHIẾC CẶP [${gameState.userPersonalCase}]`;
+        document.getElementById('gameover-title').innerText = `MỞ CẶP CÁ NHÂN [${gameState.userPersonalCase}]`;
         document.getElementById('gameover-desc').innerText = `Tất cả các cặp trên sân khấu đã được mở. Đây là giá trị trong cặp của bạn!`;
         
         finalDisplayBox.style.display = 'block';
@@ -613,15 +615,11 @@ function triggerFinalPersonalCaseReveal() {
     renderAll();
 }
 
-/* =========================================================================
-   THUẬT TOÁN TÍNH TIỀN CHÀO MUA TỪ NGÂN HÀNG (BANKER OFFER ALGORITHM)
-   ========================================================================= */
 function triggerBankerOfferModal() {
     playSound('banker');
     gameState.phase = 'BANKER_OFFER';
     renderInstructionBanner();
 
-    // 1. Lấy tất cả giá trị tiền của các cặp còn lại trên bàn chơi (bao gồm cả cặp cá nhân)
     let remainingVals = [];
     for (let i = 1; i <= 26; i++) {
         if (i !== gameState.userPersonalCase && !gameState.openedCases.includes(i)) {
@@ -632,11 +630,9 @@ function triggerBankerOfferModal() {
 
     const n = remainingVals.length;
 
-    // 2. Tính Trung bình cộng (Expected Value - EV)
     const sum = remainingVals.reduce((a, b) => a + b, 0);
     const ev = sum / n;
 
-    // 3. Tính Trung vị (Median) để phản ánh phân bổ giá trị thực tế
     const sortedVals = [...remainingVals].sort((a, b) => a - b);
     let median;
     if (n % 2 === 0) {
@@ -645,36 +641,29 @@ function triggerBankerOfferModal() {
         median = sortedVals[Math.floor(n / 2)];
     }
 
-    // 4. Hệ số chấp nhận rủi ro tăng dần theo từng Vòng (Round Discount Multiplier)
-    // Vòng 1 ngân hàng ép giá mạnh (chỉ khoảng 15-20%), các vòng cuối tiến sát 90-95% giá trị kỳ vọng
     const roundWeights = [0.15, 0.28, 0.42, 0.58, 0.72, 0.82, 0.88, 0.92, 0.95, 0.98];
     const roundWeight = roundWeights[Math.min(gameState.currentRound, roundWeights.length - 1)];
 
-    // 5. Tính Độ lệch chuẩn (Rủi ro - Volatility)
     const variance = remainingVals.reduce((acc, val) => acc + Math.pow(val - ev, 2), 0) / n;
     const stdDev = Math.sqrt(variance);
 
-    // 6. Tính Hệ số biến thiên CV (Coefficient of Variation) = StdDev / EV
-    // Nếu CV cao (còn nhiều ô bé xíu lẫn ô 100Tr) -> Rủi ro lớn -> Ngân hàng sẽ giảm nhẹ giá đề nghị
     const cv = stdDev / (ev || 1);
     const riskAdjustment = Math.max(0.75, 1 - (cv * 0.08));
 
-    // 7. Giá trị đề nghị thô (Raw Offer) = [0.7 * EV + 0.3 * Median] * Hệ số vòng * Điều chỉnh rủi ro
     const baseExpected = (0.7 * ev) + (0.3 * median);
     let rawOffer = baseExpected * roundWeight * riskAdjustment;
 
-    // 8. Quy tròn tiền hợp lý theo tiêu chuẩn ngân hàng thực tế (Round Money)
     let offer = 0;
     if (rawOffer >= 20000000) {
-        offer = Math.round(rawOffer / 1000000) * 1000000; // Làm tròn theo hàng triệu
+        offer = Math.round(rawOffer / 1000000) * 1000000;
     } else if (rawOffer >= 5000000) {
-        offer = Math.round(rawOffer / 500000) * 500000;   // Làm tròn theo 500k
+        offer = Math.round(rawOffer / 500000) * 500000;
     } else if (rawOffer >= 1000000) {
-        offer = Math.round(rawOffer / 100000) * 100000;   // Làm tròn theo 100k
+        offer = Math.round(rawOffer / 100000) * 100000;
     } else if (rawOffer >= 100000) {
-        offer = Math.round(rawOffer / 10000) * 10000;     // Làm tròn theo 10k
+        offer = Math.round(rawOffer / 10000) * 10000;
     } else {
-        offer = Math.round(rawOffer / 1000) * 1000;       // Làm tròn theo 1k
+        offer = Math.round(rawOffer / 1000) * 1000;
     }
 
     if (offer < 1000) offer = 1000;
