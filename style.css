@@ -28,18 +28,17 @@ body {
 .briefcase {
     perspective: 1000px;
     cursor: pointer;
-    width: clamp(38px, 11vw, 65px);
-    height: clamp(38px, 11vw, 65px);
+    width: clamp(45px, 12vw, 75px);
+    height: clamp(45px, 12vw, 75px);
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
 
 @media (min-width: 1024px) {
     .briefcase {
-        width: clamp(50px, 4.2vw, 75px);
-        height: clamp(50px, 4.2vw, 75px);
+        width: clamp(65px, 5.5vw, 92px);
+        height: clamp(65px, 5.5vw, 92px);
     }
 }
-
 .briefcase-inner {
     position: relative;
     width: 100%;
