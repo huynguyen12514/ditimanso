@@ -3,7 +3,7 @@ const AMOUNTS = [
     10000, 25000, 50000, 100000, 200000, 300000, 500000, 750000, 1000000, 2000000, 3000000, 4000000, 5000000,
     
     // 13 mức giá lớn (Bảng bên phải)
-    10000000, 15000000, 20000000, 25000000, 30000000, 40000000, 50000000, 75000000, 100000000, 150000000, 200000000, 300000000, 500000000
+    10000000, 15000000, 20000000, 25000000, 30000000, 40000000, 50000000, 75000000, 100000000, 125000000, 150000000, 200000000, 300000000
 ];
 
 const ROUND_QUOTAS = [6, 5, 4, 3, 2, 1, 1, 1, 1, 1];
@@ -54,7 +54,13 @@ function playSound(type, amount = 0) {
             osc.start(now);
             osc.stop(now + 0.05);
         } else if (type === 'open') {
-            if (amount < 1000000) {
+            // Tự động phân loại âm thanh dựa trên thứ hạng giá trị từ nhỏ đến lớn
+            const sortedAmounts = [...AMOUNTS].sort((a, b) => a - b);
+            let rank = sortedAmounts.indexOf(amount);
+            if (rank === -1) rank = 0;
+
+            if (rank < 13) {
+                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Nhạc vui tươi, sáng tai
                 const notes = [523.25, 659.25, 783.99];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -63,26 +69,28 @@ function playSound(type, amount = 0) {
                     g.connect(audioCtx.destination);
                     o.type = 'sine';
                     o.frequency.setValueAtTime(freq, now + idx * 0.1);
-                    g.gain.setValueAtTime(0.08, now + idx * 0.1);
+                    g.gain.setValueAtTime(0.06, now + idx * 0.1);
                     g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
                     o.start(now + idx * 0.1);
                     o.stop(now + idx * 0.1 + 0.3);
                 });
-            } else if (amount >= 1000000 && amount < 10000000) {
-                const notes = [329.63, 392.00];
+            } else if (rank >= 13 && rank < 20) {
+                // Nhóm 2: 7 mức tiếp theo -> Tone nhạc vừa, ấm áp
+                const notes = [329.63, 392.00, 493.88];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
                     o.connect(g);
                     g.connect(audioCtx.destination);
                     o.type = 'sine';
-                    o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                    g.gain.setValueAtTime(0.09, now + idx * 0.15);
-                    g.gain.linearRampToValueAtTime(0.005, now + idx * 0.15 + 0.35);
-                    o.start(now + idx * 0.15);
-                    o.stop(now + idx * 0.15 + 0.35);
+                    o.frequency.setValueAtTime(freq, now + idx * 0.12);
+                    g.gain.setValueAtTime(0.07, now + idx * 0.12);
+                    g.gain.linearRampToValueAtTime(0.003, now + idx * 0.12 + 0.35);
+                    o.start(now + idx * 0.12);
+                    o.stop(now + idx * 0.12 + 0.35);
                 });
-            } else if (amount >= 10000000 && amount < 50000000) {
+            } else if (rank >= 20 && rank < 24) {
+                // Nhóm 3: 4 mức kế tiếp -> Tone lớn hơn nhưng êm dịu, không chói tai (dùng sóng triangle mượt mà)
                 const notes = [220.00, 261.63, 329.63];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -90,13 +98,14 @@ function playSound(type, amount = 0) {
                     o.connect(g);
                     g.connect(audioCtx.destination);
                     o.type = 'triangle';
-                    o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                    g.gain.setValueAtTime(0.08, now + idx * 0.12);
-                    g.gain.exponentialRampToValueAtTime(0.002, now + idx * 0.12 + 0.4);
-                    o.start(now + idx * 0.12);
-                    o.stop(now + idx * 0.12 + 0.4);
+                    o.frequency.setValueAtTime(freq, now + idx * 0.14);
+                    g.gain.setValueAtTime(0.08, now + idx * 0.14);
+                    g.gain.exponentialRampToValueAtTime(0.002, now + idx * 0.14 + 0.4);
+                    o.start(now + idx * 0.14);
+                    o.stop(now + idx * 0.14 + 0.4);
                 });
             } else {
+                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, hoàn toàn không chói tai
                 const notes = [174.61, 220.00, 261.63];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -105,7 +114,7 @@ function playSound(type, amount = 0) {
                     g.connect(audioCtx.destination);
                     o.type = 'sine';
                     o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                    g.gain.setValueAtTime(0.1, now + idx * 0.15);
+                    g.gain.setValueAtTime(0.09, now + idx * 0.15);
                     g.gain.linearRampToValueAtTime(0.001, now + idx * 0.15 + 0.5);
                     o.start(now + idx * 0.15);
                     o.stop(now + idx * 0.15 + 0.5);
@@ -326,19 +335,17 @@ function renderCasesGrid() {
             const wrapper = document.createElement('div');
             wrapper.className = `briefcase rounded-xl relative ${isOpened ? 'opened' : ''} ${isUserCase ? 'user-personal' : ''}`;
             
-           let innerHtml = `
-    <div class="briefcase-inner">
-        <div class="briefcase-front flex items-center justify-center relative p-0.5">
-            <!-- TĂNG KÍCH THƯỚC Ở ĐÂY: đổi text-xs sm:text-lg thành text-2xl sm:text-4xl hoặc to hơn nữa tùy thích -->
-            <span class="text-2xl sm:text-3xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
-            ${isUserCase ? '<span class="absolute top-1 right-1 text-[7px] sm:text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded shadow">CHỌN</span>' : ''}
-        </div>
-        <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
-            <span class="text-[6px] sm:text-[8px] text-slate-500 font-bold">${i}</span>
-            <span class="text-[7px] sm:text-[10px] font-black text-slate-200 px-0.5 truncate w-full text-center">${formatMoney(gameState.cases[i])}</span>
-        </div>
-    </div>
-
+            let innerHtml = `
+                <div class="briefcase-inner">
+                    <div class="briefcase-front flex items-center justify-center relative p-0.5">
+                        <span class="text-xl sm:text-3xl font-black ${isUserCase ? 'text-amber-200' : 'text-amber-400'}">${i}</span>
+                        ${isUserCase ? '<span class="absolute top-1 right-1 text-[7px] sm:text-[9px] bg-amber-500 text-slate-950 font-black px-1 rounded shadow">CHỌN</span>' : ''}
+                    </div>
+                    <div class="briefcase-back flex flex-col items-center justify-center p-0.5">
+                        <span class="text-[6px] sm:text-[8px] text-slate-500 font-bold">${i}</span>
+                        <span class="text-[7px] sm:text-[10px] font-black text-slate-200 px-0.5 truncate w-full text-center">${formatMoney(gameState.cases[i])}</span>
+                    </div>
+                </div>
             `;
             wrapper.innerHTML = innerHtml;
 
@@ -387,7 +394,7 @@ function renderInstructionBanner() {
         textEl.innerText = "Cuộc gọi từ Ngân hàng! Hãy xem xét lời đề nghị.";
         subEl.innerText = "Đưa ra quyết định DEAL (Bán) hoặc NO DEAL (Tiếp tục).";
     } else if (gameState.phase === 'FINAL_SWAP') {
-        statusBadge.innerText = "Vòng Cuối Cùng";
+        statusBadge.innerText = "Vòng Áp Chót";
         textEl.innerText = "Chỉ còn 2 cặp! Mở cặp áp chót trước khi chốt chung cuộc.";
         subEl.innerText = "Click chọn cặp cuối cùng trên sân khấu.";
     } else if (gameState.phase === 'GAME_OVER') {
@@ -407,7 +414,7 @@ function renderHistoryLogs() {
     } else {
         let html = '';
         [...gameState.openedCasesHistoryLog].reverse().forEach((item, idx) => {
-            const isHighVal = item.val >= 1000000;
+            const isHighVal = item.val >= 20000000;
             const valColor = isHighVal ? 'text-rose-400 font-black' : 'text-cyan-300 font-bold';
             html += `
                 <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/90 border border-slate-800">
@@ -657,19 +664,19 @@ function triggerBankerOfferModal() {
     let rawOffer = baseExpected * roundWeight * riskAdjustment;
 
     let offer = 0;
-    if (rawOffer >= 20000000) {
+    if (rawOffer >= 50000000) {
+        offer = Math.round(rawOffer / 5000000) * 5000000;
+    } else if (rawOffer >= 10000000) {
         offer = Math.round(rawOffer / 1000000) * 1000000;
-    } else if (rawOffer >= 5000000) {
-        offer = Math.round(rawOffer / 500000) * 500000;
     } else if (rawOffer >= 1000000) {
-        offer = Math.round(rawOffer / 100000) * 100000;
+        offer = Math.round(rawOffer / 500000) * 500000;
     } else if (rawOffer >= 100000) {
-        offer = Math.round(rawOffer / 10000) * 10000;
+        offer = Math.round(rawOffer / 50000) * 50000;
     } else {
-        offer = Math.round(rawOffer / 1000) * 1000;
+        offer = Math.round(rawOffer / 10000) * 10000;
     }
 
-    if (offer < 1000) offer = 1000;
+    if (offer < 10000) offer = 10000;
 
     gameState.currentBankerOffer = offer;
     document.getElementById('banker-offer-display').innerText = formatMoney(offer);
