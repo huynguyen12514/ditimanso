@@ -60,8 +60,23 @@ function playSound(type, amount = 0) {
             if (rank === -1) rank = 0;
 
             if (rank < 13) {
-                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Nhạc vui tươi, sáng tai
-                const notes = [523.25, 659.25, 783.99];
+                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Giai điệu vui tươi, sáng bừng (Hợp âm D Major lôi cuốn)
+                const notes = [587.33, 739.99, 880, 1174.66];
+                notes.forEach((freq, idx) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    g.gain.setValueAtTime(0.05, now + idx * 0.08);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                    o.start(now + idx * 0.08);
+                    o.stop(now + idx * 0.08 + 0.25);
+                });
+            } else if (rank >= 13 && rank < 20) {
+                // Nhóm 2: 7 mức tiếp theo -> Giai điệu nhẹ nhàng, ấm áp (Hợp âm F Major 7th)
+                const notes = [349.23, 440, 523.25, 698.46];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
@@ -70,43 +85,28 @@ function playSound(type, amount = 0) {
                     o.type = 'sine';
                     o.frequency.setValueAtTime(freq, now + idx * 0.1);
                     g.gain.setValueAtTime(0.06, now + idx * 0.1);
-                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
+                    g.gain.linearRampToValueAtTime(0.002, now + idx * 0.1 + 0.3);
                     o.start(now + idx * 0.1);
                     o.stop(now + idx * 0.1 + 0.3);
                 });
-            } else if (rank >= 13 && rank < 20) {
-                // Nhóm 2: 7 mức tiếp theo -> Tone nhạc vừa, ấm áp
-                const notes = [329.63, 392.00, 493.88];
-                notes.forEach((freq, idx) => {
-                    const o = audioCtx.createOscillator();
-                    const g = audioCtx.createGain();
-                    o.connect(g);
-                    g.connect(audioCtx.destination);
-                    o.type = 'sine';
-                    o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                    g.gain.setValueAtTime(0.07, now + idx * 0.12);
-                    g.gain.linearRampToValueAtTime(0.003, now + idx * 0.12 + 0.35);
-                    o.start(now + idx * 0.12);
-                    o.stop(now + idx * 0.12 + 0.35);
-                });
             } else if (rank >= 20 && rank < 24) {
-                // Nhóm 3: 4 mức kế tiếp -> Tone lớn hơn nhưng êm dịu, không chói tai (dùng sóng triangle mượt mà)
-                const notes = [220.00, 261.63, 329.63];
+                // Nhóm 3: 4 mức kế tiếp -> Tone lớn nhưng trầm ấm, êm dịu (Sóng tam giác mượt mà, không chói tai)
+                const notes = [196.00, 246.94, 293.66, 392.00];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
                     o.connect(g);
                     g.connect(audioCtx.destination);
                     o.type = 'triangle';
-                    o.frequency.setValueAtTime(freq, now + idx * 0.14);
-                    g.gain.setValueAtTime(0.08, now + idx * 0.14);
-                    g.gain.exponentialRampToValueAtTime(0.002, now + idx * 0.14 + 0.4);
-                    o.start(now + idx * 0.14);
-                    o.stop(now + idx * 0.14 + 0.4);
+                    o.frequency.setValueAtTime(freq, now + idx * 0.12);
+                    g.gain.setValueAtTime(0.07, now + idx * 0.12);
+                    g.gain.exponentialRampToValueAtTime(0.002, now + idx * 0.12 + 0.35);
+                    o.start(now + idx * 0.12);
+                    o.stop(now + idx * 0.12 + 0.35);
                 });
             } else {
-                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, hoàn toàn không chói tai
-                const notes = [174.61, 220.00, 261.63];
+                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, cực kỳ sang trọng và êm ái
+                const notes = [130.81, 164.81, 196.00, 261.63];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
                     const g = audioCtx.createGain();
@@ -114,10 +114,10 @@ function playSound(type, amount = 0) {
                     g.connect(audioCtx.destination);
                     o.type = 'sine';
                     o.frequency.setValueAtTime(freq, now + idx * 0.15);
-                    g.gain.setValueAtTime(0.09, now + idx * 0.15);
-                    g.gain.linearRampToValueAtTime(0.001, now + idx * 0.15 + 0.5);
+                    g.gain.setValueAtTime(0.08, now + idx * 0.15);
+                    g.gain.linearRampToValueAtTime(0.001, now + idx * 0.15 + 0.45);
                     o.start(now + idx * 0.15);
-                    o.stop(now + idx * 0.15 + 0.5);
+                    o.stop(now + idx * 0.15 + 0.45);
                 });
             }
         } else if (type === 'banker') {
