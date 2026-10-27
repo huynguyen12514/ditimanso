@@ -60,7 +60,7 @@ function playSound(type, amount = 0) {
             if (rank === -1) rank = 0;
 
             if (rank < 13) {
-                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Giai điệu vui tươi, sáng bừng (Hợp âm D Major lôi cuốn)
+                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Giai điệu vui tươi, sáng bừng
                 const notes = [587.33, 739.99, 880, 1174.66];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -75,7 +75,7 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.08 + 0.25);
                 });
             } else if (rank >= 13 && rank < 20) {
-                // Nhóm 2: 7 mức tiếp theo -> Giai điệu nhẹ nhàng, ấm áp (Hợp âm F Major 7th)
+                // Nhóm 2: 7 mức tiếp theo -> Giai điệu nhẹ nhàng, ấm áp
                 const notes = [349.23, 440, 523.25, 698.46];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -90,7 +90,7 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.1 + 0.3);
                 });
             } else if (rank >= 20 && rank < 24) {
-                // Nhóm 3: 4 mức kế tiếp -> Tone lớn nhưng trầm ấm, êm dịu (Sóng tam giác mượt mà, không chói tai)
+                // Nhóm 3: 4 mức kế tiếp -> Tone lớn nhưng trầm ấm, êm dịu (Sóng tam giác)
                 const notes = [196.00, 246.94, 293.66, 392.00];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -105,7 +105,7 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.12 + 0.35);
                 });
             } else {
-                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, cực kỳ sang trọng và êm ái
+                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, êm ái
                 const notes = [130.81, 164.81, 196.00, 261.63];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -193,17 +193,33 @@ function startGameSession() {
 
 function resetGameData() {
     let shuffled = [...AMOUNTS];
-    for (let round = 0; round < 3; round++) {
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    
+    // THUẬT TOÁN XÁO TRỘN NÂNG CAO: Chống gom cụm mệnh giá lớn
+    let attempts = 0;
+    const topValues = AMOUNTS.slice(-4); // 4 mệnh giá cao nhất (chống đứng cạnh nhau)
+
+    do {
+        // Thực hiện trộn Fisher-Yates 10 vòng liên tiếp để ngẫu nhiên tuyệt đối
+        for (let round = 0; round < 10; round++) {
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
         }
-    }
-    for (let k = 0; k < 10; k++) {
-        const idx1 = Math.floor(Math.random() * shuffled.length);
-        const idx2 = Math.floor(Math.random() * shuffled.length);
-        [shuffled[idx1], shuffled[idx2]] = [shuffled[idx2], shuffled[idx1]];
-    }
+        attempts++;
+
+        // Kiểm tra xem có 2 mệnh giá lớn nào đứng liền kề nhau không
+        let isClustered = false;
+        for (let i = 0; i < shuffled.length - 1; i++) {
+            if (topValues.includes(shuffled[i]) && topValues.includes(shuffled[i+1])) {
+                isClustered = true;
+                break;
+            }
+        }
+
+        // Nếu đã rải rác tốt hoặc thử quá 25 lần thì dừng lại chấp nhận kết quả
+        if (!isClustered || attempts > 25) break;
+    } while (true);
 
     gameState.cases = {};
     for (let i = 1; i <= 26; i++) {
