@@ -196,10 +196,9 @@ function resetGameData() {
     
     // THUẬT TOÁN XÁO TRỘN NÂNG CAO: Chống gom cụm mệnh giá lớn
     let attempts = 0;
-    const topValues = AMOUNTS.slice(-4); // 4 mệnh giá cao nhất (chống đứng cạnh nhau)
+    const topValues = AMOUNTS.slice(-4);
 
     do {
-        // Thực hiện trộn Fisher-Yates 10 vòng liên tiếp để ngẫu nhiên tuyệt đối
         for (let round = 0; round < 10; round++) {
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -208,7 +207,6 @@ function resetGameData() {
         }
         attempts++;
 
-        // Kiểm tra xem có 2 mệnh giá lớn nào đứng liền kề nhau không
         let isClustered = false;
         for (let i = 0; i < shuffled.length - 1; i++) {
             if (topValues.includes(shuffled[i]) && topValues.includes(shuffled[i+1])) {
@@ -217,7 +215,6 @@ function resetGameData() {
             }
         }
 
-        // Nếu đã rải rác tốt hoặc thử quá 25 lần thì dừng lại chấp nhận kết quả
         if (!isClustered || attempts > 25) break;
     } while (true);
 
@@ -335,7 +332,8 @@ function renderCasesGrid() {
     const grid = document.getElementById('cases-grid');
     grid.innerHTML = '';
 
-    const rowLayout = [5, 5, 6, 5, 5];
+    // Bố trí 4 hàng với số lượng cặp lần lượt là: 6, 7, 7, 6 (Tổng = 26)
+    const rowLayout = [6, 7, 7, 6];
     let caseNumber = 1;
 
     rowLayout.forEach((count) => {
@@ -692,7 +690,7 @@ function triggerBankerOfferModal() {
         offer = Math.round(rawOffer / 10000) * 10000;
     }
 
-    if (offer < 10000) offer = 10000;
+    if (offer < 1000) offer = 1000;
 
     gameState.currentBankerOffer = offer;
     document.getElementById('banker-offer-display').innerText = formatMoney(offer);
