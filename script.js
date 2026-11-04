@@ -3,7 +3,7 @@ const AMOUNTS = [
     1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000,
     
     // 13 mức giá lớn (Bảng bên phải)
-    1500000, 2000000, 3000000, 4000000, 5000000, 10000000, 2500000, 20000000, 25000000, 50000000, 80000000, 150000000, 200000000
+    1500000, 2000000, 3000000, 4000000, 5000000, 10000000, 1500000, 20000000, 25000000, 50000000, 80000000, 150000000, 200000000
 ];
 
 const ROUND_QUOTAS = [6, 5, 4, 3, 2, 1, 1, 1, 1, 1];
@@ -54,13 +54,11 @@ function playSound(type, amount = 0) {
             osc.start(now);
             osc.stop(now + 0.05);
         } else if (type === 'open') {
-            // Tự động phân loại âm thanh dựa trên thứ hạng giá trị từ nhỏ đến lớn
             const sortedAmounts = [...AMOUNTS].sort((a, b) => a - b);
             let rank = sortedAmounts.indexOf(amount);
             if (rank === -1) rank = 0;
 
             if (rank < 13) {
-                // Nhóm 1: 13 mức giá nhỏ đầu tiên -> Giai điệu vui tươi, sáng bừng
                 const notes = [587.33, 739.99, 880, 1174.66];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -75,7 +73,6 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.08 + 0.25);
                 });
             } else if (rank >= 13 && rank < 20) {
-                // Nhóm 2: 7 mức tiếp theo -> Giai điệu nhẹ nhàng, ấm áp
                 const notes = [349.23, 440, 523.25, 698.46];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -90,7 +87,6 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.1 + 0.3);
                 });
             } else if (rank >= 20 && rank < 24) {
-                // Nhóm 3: 4 mức kế tiếp -> Tone lớn nhưng trầm ấm, êm dịu (Sóng tam giác)
                 const notes = [196.00, 246.94, 293.66, 392.00];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -105,7 +101,6 @@ function playSound(type, amount = 0) {
                     o.stop(now + idx * 0.12 + 0.35);
                 });
             } else {
-                // Nhóm 4: 2 mức cao nhất -> Hoành tráng, sâu lắng, êm ái
                 const notes = [130.81, 164.81, 196.00, 261.63];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -193,8 +188,6 @@ function startGameSession() {
 
 function resetGameData() {
     let shuffled = [...AMOUNTS];
-    
-    // THUẬT TOÁN XÁO TRỘN NÂNG CAO: Chống gom cụm mệnh giá lớn
     let attempts = 0;
     const topValues = AMOUNTS.slice(-4);
 
@@ -332,7 +325,6 @@ function renderCasesGrid() {
     const grid = document.getElementById('cases-grid');
     grid.innerHTML = '';
 
-    // Bố trí 4 hàng với số lượng cặp lần lượt là: 6, 7, 7, 6 (Tổng = 26)
     const rowLayout = [6, 7, 7, 6];
     let caseNumber = 1;
 
@@ -639,6 +631,7 @@ function triggerFinalPersonalCaseReveal() {
     renderAll();
 }
 
+// CƠ CHẾ TÍNH TOÁN NGÂN HÀNG CHÀO GIÁ CHUẨN XÁC & THÔNG MINH HƠN
 function triggerBankerOfferModal() {
     playSound('banker');
     gameState.phase = 'BANKER_OFFER';
@@ -654,9 +647,11 @@ function triggerBankerOfferModal() {
 
     const n = remainingVals.length;
 
+    // 1. Tính toán giá trị kỳ vọng (Expected Value - EV) trung bình các cặp còn lại
     const sum = remainingVals.reduce((a, b) => a + b, 0);
     const ev = sum / n;
 
+    // 2. Tính giá trị trung vị (Median) để giảm thiểu ảnh hưởng cục bộ của các giải thưởng siêu lớn hoặc siêu nhỏ
     const sortedVals = [...remainingVals].sort((a, b) => a - b);
     let median;
     if (n % 2 === 0) {
@@ -665,32 +660,41 @@ function triggerBankerOfferModal() {
         median = sortedVals[Math.floor(n / 2)];
     }
 
-    const roundWeights = [0.15, 0.28, 0.42, 0.58, 0.72, 0.82, 0.88, 0.92, 0.95, 0.98];
+    // 3. Trọng số tiến trình vòng chơi (Vòng đầu ngân hàng ép giá thấp, các vòng sau tiến dần về EV)
+    const roundWeights = [0.12, 0.22, 0.35, 0.48, 0.60, 0.72, 0.82, 0.90, 0.95, 0.98];
     const roundWeight = roundWeights[Math.min(gameState.currentRound, roundWeights.length - 1)];
 
+    // 4. Phân tích độ biến động (Standard Deviation & Coefficient of Variation) để tinh chỉnh mức độ mạo hiểm
     const variance = remainingVals.reduce((acc, val) => acc + Math.pow(val - ev, 2), 0) / n;
     const stdDev = Math.sqrt(variance);
-
     const cv = stdDev / (ev || 1);
-    const riskAdjustment = Math.max(0.75, 1 - (cv * 0.08));
+    
+    // Hệ số rủi ro động: bảng còn nhiều giá trị chênh lệch lớn thì ngân hàng offer thận trọng hơn
+    const riskAdjustment = Math.max(0.70, 1 - (cv * 0.07));
 
-    const baseExpected = (0.7 * ev) + (0.3 * median);
+    // Công thức kết hợp tối ưu: 65% Kỳ vọng (EV) + 35% Trung vị (Median)
+    const baseExpected = (0.65 * ev) + (0.35 * median);
     let rawOffer = baseExpected * roundWeight * riskAdjustment;
 
+    // 5. Cơ chế làm tròn thông minh theo từng bậc mệnh giá tiền tệ Việt Nam
     let offer = 0;
     if (rawOffer >= 50000000) {
-        offer = Math.round(rawOffer / 5000000) * 5000000;
+        offer = Math.round(rawOffer / 5000000) * 5000000; // Làm tròn đến 5 triệu
     } else if (rawOffer >= 10000000) {
-        offer = Math.round(rawOffer / 1000000) * 1000000;
-    } else if (rawOffer >= 1000000) {
-        offer = Math.round(rawOffer / 500000) * 500000;
-    } else if (rawOffer >= 100000) {
-        offer = Math.round(rawOffer / 50000) * 50000;
+        offer = Math.round(rawOffer / 1000000) * 1000000; // Làm tròn đến 1 triệu
+    } else if (rawOffer >= 2000000) {
+        offer = Math.round(rawOffer / 500000) * 500000;   // Làm tròn đến 500 nghìn
+    } else if (rawOffer >= 500000) {
+        offer = Math.round(rawOffer / 100000) * 100000;   // Làm tròn đến 100 nghìn
+    } else if (rawOffer >= 50000) {
+        offer = Math.round(rawOffer / 50000) * 50000;     // Làm tròn đến 50 nghìn
     } else {
-        offer = Math.round(rawOffer / 10000) * 10000;
+        offer = Math.round(rawOffer / 10000) * 10000;     // Làm tròn đến 10 nghìn
     }
 
+    // Đảm bảo mức chào giá tối thiểu không âm hoặc quá thấp so với mốc 1.000đ
     if (offer < 1000) offer = 1000;
+    if (offer > ev) offer = Math.floor(ev * 0.95); // Không bao giờ vượt quá EV thực tế
 
     gameState.currentBankerOffer = offer;
     document.getElementById('banker-offer-display').innerText = formatMoney(offer);
